@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio Editor — Update Your Website Easily</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+  
+  .app { display: flex; min-height: 100vh; }
+  
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px; background: #1e293b; border-right: 1px solid #334155;
+    padding: 24px 0; position: fixed; height: 100vh; overflow-y: auto;
+  }
+  .sidebar-title {
+    font-size: 18px; font-weight: 700; padding: 0 20px 20px;
+    color: #64ffda; border-bottom: 1px solid #334155; margin-bottom: 12px;
+  }
+  .sidebar-title small { display: block; font-size: 11px; color: #94a3b8; font-weight: 400; margin-top: 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 20px; cursor: pointer; transition: all .15s;
+    font-size: 14px; color: #94a3b8; border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: #334155; color: #e2e8f0; }
+  .nav-item.active { background: rgba(100,255,218,0.05); color: #64ffda; border-left-color: #64ffda; }
+  .nav-item .icon { font-size: 18px; width: 20px; text-align: center; }
+  
+  /* MAIN */
+  .main { margin-left: 260px; flex: 1; padding: 32px 40px; }
+  .main-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid #334155;
+  }
+  .main-header h1 { font-size: 24px; font-weight: 700; }
+  .main-header p { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+  
+  .btn-group { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; transition: all .2s; display: flex; align-items: center; gap: 6px;
+  }
+  .btn-save { background: #64ffda; color: #0f172a; }
+  .btn-save:hover { background: #5aedc9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(100,255,218,0.3); }
+  .btn-preview { background: #334155; color: #e2e8f0; }
+  .btn-preview:hover { background: #475569; }
+  .btn-export { background: #7c3aed; color: white; }
+  .btn-export:hover { background: #6d28d9; }
+  .btn-danger { background: #ef4444; color: white; font-size: 12px; padding: 6px 12px; }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-add { background: rgba(100,255,218,0.1); color: #64ffda; border: 1px dashed #64ffda; padding: 8px 16px; }
+  .btn-add:hover { background: rgba(100,255,218,0.2); }
+  
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+  
+  /* FORM ELEMENTS */
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: #64ffda; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .form-hint { font-size: 11px; color: #64748b; margin-bottom: 6px; }
+  .form-input, .form-textarea, .form-select {
+    width: 100%; padding: 12px 14px; border-radius: 8px;
+    background: #1e293b; border: 1px solid #334155; color: #e2e8f0;
+    font-size: 14px; font-family: inherit; transition: border-color .2s;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    outline: none; border-color: #64ffda; box-shadow: 0 0 0 3px rgba(100,255,218,0.1);
+  }
+  .form-textarea { min-height: 100px; resize: vertical; }
+  
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  
+  /* CARDS */
+  .card {
+    background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    padding: 20px; margin-bottom: 16px; position: relative;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: #475569; }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .card-title { font-size: 16px; font-weight: 600; color: #e2e8f0; }
+  .card-num { font-size: 11px; color: #64ffda; font-weight: 600; background: rgba(100,255,218,0.1); padding: 2px 8px; border-radius: 4px; }
+  
+  /* TAGS INPUT */
+  .tags-container {
+    display: flex; flex-wrap: wrap; gap: 6px; padding: 8px;
+    background: #1e293b; border: 1px solid #334155; border-radius: 8px; min-height: 44px;
+  }
+  .tag-item {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(100,255,218,0.1); color: #64ffda; padding: 4px 10px;
+    border-radius: 4px; font-size: 12px;
+  }
+  .tag-remove { cursor: pointer; font-size: 14px; opacity: 0.7; }
+  .tag-remove:hover { opacity: 1; }
+  .tag-input {
+    border: none; background: transparent; color: #e2e8f0;
+    font-size: 13px; outline: none; flex: 1; min-width: 100px;
+  }
+  
+  /* BULLETS */
+  .bullet-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+  .bullet-item input { flex: 1; }
+  .bullet-remove { cursor: pointer; color: #ef4444; font-size: 16px; padding: 12px 4px; opacity: 0.6; }
+  .bullet-remove:hover { opacity: 1; }
+  
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; padding: 14px 24px;
+    background: #064e3b; border: 1px solid #065f46; border-radius: 8px;
+    color: #6ee7b7; font-size: 14px; font-weight: 500;
+    transform: translateY(100px); opacity: 0; transition: all .3s;
+    z-index: 1000;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  
+  /* STATUS BAR */
+  .status-bar {
+    position: fixed; bottom: 0; left: 260px; right: 0;
+    background: #1e293b; border-top: 1px solid #334155;
+    padding: 8px 24px; display: flex; justify-content: space-between;
+    align-items: center; font-size: 12px; color: #94a3b8; z-index: 50;
+  }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; margin-right: 6px; }
+  
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .sidebar { width: 60px; padding: 16px 0; }
+    .sidebar-title { display: none; }
+    .nav-item { padding: 12px; justify-content: center; }
+    .nav-item span:not(.icon) { display: none; }
+    .main { margin-left: 60px; padding: 20px; }
+    .form-row, .form-row-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">
+      Portfolio Editor
+      <small>Update your website easily</small>
+    </div>
+    <div class="nav-item active" onclick="showSection('personal')">
+      <span class="icon">👤</span><span>Personal Info</span>
+    </div>
+    <div class="nav-item" onclick="showSection('social')">
+      <span class="icon">🔗</span><span>Social Links</span>
+    </div>
+    <div class="nav-item" onclick="showSection('stats')">
+      <span class="icon">📊</span><span>Stats</span>
+    </div>
+    <div class="nav-item" onclick="showSection('about')">
+      <span class="icon">📝</span><span>About Me</span>
+    </div>
+    <div class="nav-item" onclick="showSection('skills')">
+      <span class="icon">⚡</span><span>Tech Stack</span>
+    </div>
+    <div class="nav-item" onclick="showSection('expertise')">
+      <span class="icon">🧠</span><span>Expertise</span>
+    </div>
+    <div class="nav-item" onclick="showSection('projects')">
+      <span class="icon">🚀</span><span>Projects</span>
+    </div>
+    <div class="nav-item" onclick="showSection('experience')">
+      <span class="icon">💼</span><span>Experience</span>
+    </div>
+    <div class="nav-item" onclick="showSection('education')">
+      <span class="icon">🎓</span><span>Education</span>
+    </div>
+    <div class="nav-item" onclick="showSection('certifications')">
+      <span class="icon">📜</span><span>Certifications</span>
+    </div>
+    <div class="nav-item" onclick="showSection('contact')">
+      <span class="icon">✉️</span><span>Contact</span>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <div class="main-header">
+      <div>
+        <h1>Portfolio Content Editor</h1>
+        <p>Edit your website content below. Click "Save & Download" to get your updated data.json file.</p>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-preview" onclick="previewSite()">👁️ Preview</button>
+        <button class="btn btn-save" onclick="saveData()">💾 Save & Download</button>
+      </div>
+    </div>
+
+    <!-- PERSONAL INFO -->
+    <div class="section active" id="sec-personal">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Personal Information</div></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" id="p-name" placeholder="Mohammad Sheriff"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input class="form-input" id="p-fullName" placeholder="Mohammad Sheriff Mehmood"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Initials (Logo)</label>
+            <input class="form-input" id="p-initials" placeholder="SM"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Job Title</label>
+            <input class="form-input" id="p-title" placeholder="Senior Data Scientist | AI/ML Engineer"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="p-email" type="email" placeholder="your@email.com"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input class="form-input" id="p-location" placeholder="Hyderabad, India"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hero Greeting</label>
+          <input class="form-input" id="p-heroGreeting" placeholder="Hi, my name is"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hero Tagline</label>
+          <div class="form-hint">Use &lt;span&gt;text&lt;/span&gt; to highlight words in purple</div>
+          <input class="form-input" id="p-heroTagline" placeholder="I build intelligent AI systems..."/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hero Description</label>
+          <div class="form-hint">Use &lt;strong&gt;text&lt;/strong&gt; to bold/highlight words in teal</div>
+          <textarea class="form-textarea" id="p-heroDescription" placeholder="Your intro paragraph..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Resume File</label>
+            <input class="form-input" id="p-resumeLink" placeholder="resume.pdf"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Profile Image File</label>
+            <input class="form-input" id="p-profileImage" placeholder="profile.jpg"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOCIAL LINKS -->
+    <div class="section" id="sec-social">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Social Links</div></div>
+        <div class="form-group">
+          <label class="form-label">GitHub URL</label>
+          <input class="form-input" id="s-github" placeholder="https://github.com/yourname"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">LinkedIn URL</label>
+          <input class="form-input" id="s-linkedin" placeholder="https://linkedin.com/in/yourprofile"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">LeetCode URL</label>
+          <input class="form-input" id="s-leetcode" placeholder="https://leetcode.com/yourprofile"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="section" id="sec-stats">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Hero Stats (4 items shown below your intro)</div></div>
+        <div id="stats-list"></div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="section" id="sec-about">
+      <div class="card">
+        <div class="card-header"><div class="card-title">About Me Paragraphs</div></div>
+        <div class="form-hint" style="margin-bottom:16px;">Use &lt;em&gt;text&lt;/em&gt; to highlight words in teal color. Each box is one paragraph.</div>
+        <div id="about-list"></div>
+        <button class="btn btn-add" onclick="addAboutParagraph()">+ Add Paragraph</button>
+      </div>
+    </div>
+
+    <!-- TECH STACK -->
+    <div class="section" id="sec-skills">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Tech Stack (shown in sidebar)</div></div>
+        <div class="form-hint" style="margin-bottom:16px;">One skill per line</div>
+        <div id="skills-list"></div>
+        <button class="btn btn-add" onclick="addSkill()">+ Add Skill</button>
+      </div>
+    </div>
+
+    <!-- EXPERTISE -->
+    <div class="section" id="sec-expertise">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Expertise Cards (Top Row)</div></div>
+        <div id="expertise-list"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Expertise Highlights (Bottom Row)</div></div>
+        <div id="expertise-highlights-list"></div>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="section" id="sec-projects">
+      <div id="projects-list"></div>
+      <button class="btn btn-add" onclick="addProject()" style="margin-top:16px;">+ Add New Project</button>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="section" id="sec-experience">
+      <div id="experience-list"></div>
+      <button class="btn btn-add" onclick="addExperience()" style="margin-top:16px;">+ Add New Company</button>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="section" id="sec-education">
+      <div id="education-list"></div>
+      <button class="btn btn-add" onclick="addEducation()" style="margin-top:16px;">+ Add Education</button>
+    </div>
+
+    <!-- CERTIFICATIONS -->
+    <div class="section" id="sec-certifications">
+      <div id="certifications-list"></div>
+      <button class="btn btn-add" onclick="addCertification()" style="margin-top:16px;">+ Add Certification</button>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="section" id="sec-contact">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Contact Section</div></div>
+        <div class="form-group">
+          <label class="form-label">Eyebrow Text</label>
+          <input class="form-input" id="c-eyebrow" placeholder="What's Next?"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Heading</label>
+          <input class="form-input" id="c-heading" placeholder="Get In Touch"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="c-description" placeholder="Your contact description..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:60px;"></div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="status-bar">
+  <div><span class="status-dot"></span>Editor Ready</div>
+  <div id="status-text">Last saved: Never</div>
+</div>
+
+<script>
+let data = {};
+
+// Load data
+async function loadData() {
+  try {
+    const resp = await fetch('data.json');
+    data = await resp.json();
+    populateAll();
+    showToast('✅ Data loaded successfully!');
+  } catch(e) {
+    showToast('⚠️ Could not load data.json — starting fresh');
+    data = getEmptyData();
+    populateAll();
+  }
+}
+
+function getEmptyData() {
+  return {
+    personal: { name: '', fullName: '', initials: '', title: '', heroGreeting: 'Hi, my name is', heroTagline: '', heroDescription: '', email: '', location: '', resumeLink: 'resume.pdf', profileImage: 'profile.jpg' },
+    socialLinks: { github: '', linkedin: '', leetcode: '' },
+    stats: [{ value: '', label: '' },{ value: '', label: '' },{ value: '', label: '' },{ value: '', label: '' }],
+    about: [''],
+    techStack: [''],
+    expertise: [],
+    expertiseHighlights: [],
+    projects: [],
+    experience: [],
+    education: [],
+    certifications: [],
+    contact: { eyebrow: "What's Next?", heading: 'Get In Touch', description: '' }
+  };
+}
+
+function populateAll() {
+  // Personal
+  const p = data.personal;
+  document.getElementById('p-name').value = p.name || '';
+  document.getElementById('p-fullName').value = p.fullName || '';
+  document.getElementById('p-initials').value = p.initials || '';
+  document.getElementById('p-title').value = p.title || '';
+  document.getElementById('p-email').value = p.email || '';
+  document.getElementById('p-location').value = p.location || '';
+  document.getElementById('p-heroGreeting').value = p.heroGreeting || '';
+  document.getElementById('p-heroTagline').value = p.heroTagline || '';
+  document.getElementById('p-heroDescription').value = p.heroDescription || '';
+  document.getElementById('p-resumeLink').value = p.resumeLink || '';
+  document.getElementById('p-profileImage').value = p.profileImage || '';
+
+  // Social
+  document.getElementById('s-github').value = data.socialLinks.github || '';
+  document.getElementById('s-linkedin').value = data.socialLinks.linkedin || '';
+  document.getElementById('s-leetcode').value = data.socialLinks.leetcode || '';
+
+  // Contact
+  document.getElementById('c-eyebrow').value = data.contact.eyebrow || '';
+  document.getElementById('c-heading').value = data.contact.heading || '';
+  document.getElementById('c-description').value = data.contact.description || '';
+
+  renderStats();
+  renderAbout();
+  renderSkills();
+  renderExpertise();
+  renderExpertiseHighlights();
+  renderProjects();
+  renderExperience();
+  renderEducation();
+  renderCertifications();
+}
+
+// STATS
+function renderStats() {
+  const el = document.getElementById('stats-list');
+  el.innerHTML = data.stats.map((s, i) => `
+    <div class="form-row" style="margin-bottom:12px;">
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">Stat ${i+1} Value</label>
+        <input class="form-input" value="${escHtml(s.value)}" onchange="data.stats[${i}].value=this.value"/>
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">Stat ${i+1} Label</label>
+        <input class="form-input" value="${escHtml(s.label)}" onchange="data.stats[${i}].label=this.value"/>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ABOUT
+function renderAbout() {
+  const el = document.getElementById('about-list');
+  el.innerHTML = data.about.map((p, i) => `
+    <div class="form-group" style="position:relative;">
+      <label class="form-label">Paragraph ${i+1}</label>
+      <textarea class="form-textarea" onchange="data.about[${i}]=this.value">${escHtml(p)}</textarea>
+      ${data.about.length > 1 ? `<span class="bullet-remove" onclick="data.about.splice(${i},1);renderAbout();" style="position:absolute;top:0;right:0;">✕</span>` : ''}
+    </div>
+  `).join('');
+}
+function addAboutParagraph() { data.about.push(''); renderAbout(); }
+
+// SKILLS
+function renderSkills() {
+  const el = document.getElementById('skills-list');
+  el.innerHTML = data.techStack.map((s, i) => `
+    <div class="bullet-item">
+      <input class="form-input" value="${escHtml(s)}" onchange="data.techStack[${i}]=this.value"/>
+      <span class="bullet-remove" onclick="data.techStack.splice(${i},1);renderSkills();">✕</span>
+    </div>
+  `).join('');
+}
+function addSkill() { data.techStack.push(''); renderSkills(); }
+
+// EXPERTISE
+function renderExpertise() {
+  const el = document.getElementById('expertise-list');
+  el.innerHTML = data.expertise.map((e, i) => `
+    <div class="card" style="background:#0f172a;">
+      <div class="form-row-3">
+        <div class="form-group"><label class="form-label">Category</label><input class="form-input" value="${escHtml(e.category)}" onchange="data.expertise[${i}].category=this.value"/></div>
+        <div class="form-group"><label class="form-label">Level</label><input class="form-input" value="${escHtml(e.level)}" onchange="data.expertise[${i}].level=this.value"/></div>
+        <div class="form-group"><label class="form-label">Progress %</label><input class="form-input" type="number" min="0" max="100" value="${e.progress}" onchange="data.expertise[${i}].progress=parseInt(this.value)"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Details</label><input class="form-input" value="${escHtml(e.details)}" onchange="data.expertise[${i}].details=this.value"/></div>
+    </div>
+  `).join('');
+}
+
+function renderExpertiseHighlights() {
+  const el = document.getElementById('expertise-highlights-list');
+  el.innerHTML = data.expertiseHighlights.map((e, i) => `
+    <div class="card" style="background:#0f172a;">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" value="${escHtml(e.title)}" onchange="data.expertiseHighlights[${i}].title=this.value"/></div>
+        <div class="form-group"><label class="form-label">Value</label><input class="form-input" value="${escHtml(e.value)}" onchange="data.expertiseHighlights[${i}].value=this.value"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Details</label><input class="form-input" value="${escHtml(e.details)}" onchange="data.expertiseHighlights[${i}].details=this.value"/></div>
+        <div class="form-group"><label class="form-label">Badge</label><input class="form-input" value="${escHtml(e.badge || '')}" onchange="data.expertiseHighlights[${i}].badge=this.value"/></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// PROJECTS
+function renderProjects() {
+  const el = document.getElementById('projects-list');
+  el.innerHTML = data.projects.map((p, i) => `
+    <div class="card">
+      <div class="card-header">
+        <div><span class="card-num">#${i+1}</span> <span class="card-title" style="margin-left:8px;">${escHtml(p.name) || 'New Project'}</span></div>
+        <button class="btn btn-danger" onclick="data.projects.splice(${i},1);renderProjects();">🗑️ Remove</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" value="${escHtml(p.name)}" onchange="data.projects[${i}].name=this.value;renderProjects();"/></div>
+        <div class="form-group">
+          <label class="form-label">Featured?</label>
+          <select class="form-select" onchange="data.projects[${i}].featured=this.value==='true'">
+            <option value="true" ${p.featured?'selected':''}>Yes — Featured</option>
+            <option value="false" ${!p.featured?'selected':''}>No — Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" onchange="data.projects[${i}].description=this.value">${escHtml(p.description)}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">GitHub Link</label><input class="form-input" value="${escHtml(p.github)}" onchange="data.projects[${i}].github=this.value"/></div>
+        <div class="form-group"><label class="form-label">Live Demo Link</label><input class="form-input" value="${escHtml(p.demo || '')}" onchange="data.projects[${i}].demo=this.value"/></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tags (comma separated)</label>
+        <input class="form-input" value="${(p.tags||[]).join(', ')}" onchange="data.projects[${i}].tags=this.value.split(',').map(t=>t.trim()).filter(t=>t)"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Icon</label>
+        <div class="form-hint">Choose from: ti-brain, ti-chart-arrows-vertical, ti-message-language, ti-robot, ti-eye, ti-chart-line, ti-sparkles, ti-rocket, ti-code</div>
+        <input class="form-input" value="${escHtml(p.icon)}" onchange="data.projects[${i}].icon=this.value"/>
+      </div>
+    </div>
+  `).join('');
+}
+function addProject() {
+  data.projects.push({ name: '', description: '', tags: [], icon: 'ti-brain', featured: false, github: '', demo: '' });
+  renderProjects();
+}
+
+// EXPERIENCE
+function renderExperience() {
+  const el = document.getElementById('experience-list');
+  el.innerHTML = data.experience.map((exp, i) => `
+    <div class="card">
+      <div class="card-header">
+        <div><span class="card-num">#${i+1}</span> <span class="card-title" style="margin-left:8px;">${escHtml(exp.company) || 'New Company'}</span></div>
+        <button class="btn btn-danger" onclick="data.experience.splice(${i},1);renderExperience();">🗑️ Remove</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Company</label><input class="form-input" value="${escHtml(exp.company)}" onchange="data.experience[${i}].company=this.value;renderExperience();"/></div>
+        <div class="form-group"><label class="form-label">Role / Title</label><input class="form-input" value="${escHtml(exp.role)}" onchange="data.experience[${i}].role=this.value"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Period</label><input class="form-input" value="${escHtml(exp.period)}" onchange="data.experience[${i}].period=this.value" placeholder="2024 – Present"/></div>
+        <div class="form-group"><label class="form-label">Location</label><input class="form-input" value="${escHtml(exp.location)}" onchange="data.experience[${i}].location=this.value"/></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bullet Points (one per line)</label>
+        <div id="exp-bullets-${i}">
+          ${(exp.bullets||[]).map((b, bi) => `
+            <div class="bullet-item">
+              <input class="form-input" value="${escHtml(b)}" onchange="data.experience[${i}].bullets[${bi}]=this.value"/>
+              <span class="bullet-remove" onclick="data.experience[${i}].bullets.splice(${bi},1);renderExperience();">✕</span>
+            </div>
+          `).join('')}
+        </div>
+        <button class="btn btn-add" onclick="data.experience[${i}].bullets.push('');renderExperience();" style="margin-top:8px;">+ Add Bullet</button>
+      </div>
+    </div>
+  `).join('');
+}
+function addExperience() {
+  data.experience.push({ company: '', role: '', period: '', location: '', bullets: [''] });
+  renderExperience();
+}
+
+// EDUCATION
+function renderEducation() {
+  const el = document.getElementById('education-list');
+  el.innerHTML = data.education.map((edu, i) => `
+    <div class="card">
+      <div class="card-header">
+        <div><span class="card-num">#${i+1}</span> <span class="card-title" style="margin-left:8px;">${escHtml(edu.degree) || 'New Degree'}</span></div>
+        <button class="btn btn-danger" onclick="data.education.splice(${i},1);renderEducation();">🗑️ Remove</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Degree</label><input class="form-input" value="${escHtml(edu.degree)}" onchange="data.education[${i}].degree=this.value;renderEducation();"/></div>
+        <div class="form-group"><label class="form-label">University</label><input class="form-input" value="${escHtml(edu.university)}" onchange="data.education[${i}].university=this.value"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Details</label><input class="form-input" value="${escHtml(edu.details)}" onchange="data.education[${i}].details=this.value"/></div>
+    </div>
+  `).join('');
+}
+function addEducation() {
+  data.education.push({ degree: '', university: '', details: '', icon: 'ti-school' });
+  renderEducation();
+}
+
+// CERTIFICATIONS
+function renderCertifications() {
+  const el = document.getElementById('certifications-list');
+  el.innerHTML = data.certifications.map((cert, i) => `
+    <div class="card">
+      <div class="card-header">
+        <div><span class="card-num">#${i+1}</span> <span class="card-title" style="margin-left:8px;">${escHtml(cert.name) || 'New Cert'}</span></div>
+        <button class="btn btn-danger" onclick="data.certifications.splice(${i},1);renderCertifications();">🗑️ Remove</button>
+      </div>
+      <div class="form-row-3">
+        <div class="form-group"><label class="form-label">Issuer</label><input class="form-input" value="${escHtml(cert.issuer)}" onchange="data.certifications[${i}].issuer=this.value"/></div>
+        <div class="form-group"><label class="form-label">Certification Name</label><input class="form-input" value="${escHtml(cert.name)}" onchange="data.certifications[${i}].name=this.value;renderCertifications();"/></div>
+        <div class="form-group"><label class="form-label">Year</label><input class="form-input" value="${escHtml(cert.year)}" onchange="data.certifications[${i}].year=this.value"/></div>
+      </div>
+    </div>
+  `).join('');
+}
+function addCertification() {
+  data.certifications.push({ issuer: '', name: '', year: '' });
+  renderCertifications();
+}
+
+// COLLECT DATA
+function collectData() {
+  data.personal = {
+    name: document.getElementById('p-name').value,
+    fullName: document.getElementById('p-fullName').value,
+    initials: document.getElementById('p-initials').value,
+    title: document.getElementById('p-title').value,
+    heroGreeting: document.getElementById('p-heroGreeting').value,
+    heroTagline: document.getElementById('p-heroTagline').value,
+    heroDescription: document.getElementById('p-heroDescription').value,
+    email: document.getElementById('p-email').value,
+    location: document.getElementById('p-location').value,
+    resumeLink: document.getElementById('p-resumeLink').value,
+    profileImage: document.getElementById('p-profileImage').value
+  };
+  data.socialLinks = {
+    github: document.getElementById('s-github').value,
+    linkedin: document.getElementById('s-linkedin').value,
+    leetcode: document.getElementById('s-leetcode').value
+  };
+  data.contact = {
+    eyebrow: document.getElementById('c-eyebrow').value,
+    heading: document.getElementById('c-heading').value,
+    description: document.getElementById('c-description').value
+  };
+  return data;
+}
+
+// SAVE / DOWNLOAD
+function saveData() {
+  collectData();
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  document.getElementById('status-text').textContent = 'Last saved: ' + new Date().toLocaleTimeString();
+  showToast('✅ data.json downloaded! Replace the file in your project folder.');
+}
+
+// PREVIEW
+function previewSite() {
+  window.open('index.html', '_blank');
+}
+
+// SECTION NAVIGATION
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+// UTILS
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// INIT
+loadData();
+</script>
+</body>
+</html>

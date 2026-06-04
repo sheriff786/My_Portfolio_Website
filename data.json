@@ -1,0 +1,203 @@
+{
+  "personal": {
+    "name": "Mohammad Sheriff",
+    "fullName": "Mohammad Sheriff Mehmood",
+    "initials": "SM",
+    "title": "Senior Data Scientist | AI/ML Engineer",
+    "heroGreeting": "Hi, my name is",
+    "heroTagline": "I build <span>intelligent AI systems</span> &amp; solve complex problems.",
+    "heroDescription": "I'm a <strong>Senior Data Scientist & AI/ML Engineer</strong> with 6+ years of experience building enterprise-grade AI applications, deploying LLMs, and designing scalable ML systems. Passionate about <strong>Generative AI</strong>, NLP, and transforming business challenges into data-driven solutions.",
+    "email": "mdsheriff2702@gmail.com",
+    "location": "Hyderabad/Bangalore, India",
+    "resumeLink": "resume.pdf",
+    "profileImage": "profile.jpg"
+  },
+  "socialLinks": {
+    "github": "https://github.com/sheriff786",
+    "linkedin": "https://www.linkedin.com/in/mohd-sheriff-mehmood/",
+    "leetcode": "https://leetcode.com/MohdSheriff786"
+  },
+  "stats": [
+    { "value": "6+", "label": "Years Exp" },
+    { "value": "M.Tech", "label": "BITS Pilani" },
+    { "value": "10+", "label": "AI Projects" },
+    { "value": "40%", "label": "Churn Reduced" }
+  ],
+  "about": [
+    "Hello! I'm Mohammad Sheriff, a Senior Data Scientist & AI/ML Engineer based in <em>Hyderabad/Bangalore, India</em>. I specialize in transforming complex business challenges into scalable, data-driven solutions. Currently working at <em>ValueLabs</em> as a Senior Data Scientist.",
+    "I have successfully designed and deployed enterprise-grade AI applications that enhanced customer experience, reduced customer churn by 40%, and generated significant revenue growth through intelligent automation and advanced analytics.",
+    "With an M.Tech in Data Science & Engineering from <em>BITS Pilani</em>, I combine strong academic foundations with hands-on expertise in <em>Generative AI, LLMs, RAG, MLOps</em>, and cloud-based AI solutions. I thrive at the intersection of innovation, research, and business impact."
+  ],
+  "techStack": [
+    "Python / SQL",
+    "TensorFlow / PyTorch",
+    "LangChain / LlamaIndex",
+    "OpenAI / Hugging Face",
+    "MLflow / Kubeflow",
+    "AWS / Azure / GCP",
+    "Docker / Kubernetes",
+    "NLP / Computer Vision"
+  ],
+  "expertise": [
+    {
+      "category": "Generative AI",
+      "icon": "ti-sparkles",
+      "level": "LLMs",
+      "details": "GPT, LLaMA, RAG, Fine-tuning",
+      "progress": 90,
+      "colorClass": "easy"
+    },
+    {
+      "category": "NLP",
+      "icon": "ti-message-language",
+      "level": "Deep",
+      "details": "Transformers, BERT, Embeddings",
+      "progress": 85,
+      "colorClass": "medium"
+    },
+    {
+      "category": "MLOps",
+      "icon": "ti-rocket",
+      "level": "Prod",
+      "details": "MLflow, Kubeflow, CI/CD",
+      "progress": 80,
+      "colorClass": "hard"
+    }
+  ],
+  "expertiseHighlights": [
+    {
+      "title": "Cloud & Infrastructure",
+      "icon": "ti-cloud",
+      "value": "AWS · Azure · GCP",
+      "details": "SageMaker, Vertex AI, Azure ML",
+      "badge": "☁️ Multi-Cloud",
+      "type": "rank"
+    },
+    {
+      "title": "Impact & Scale",
+      "icon": "ti-chart-arrows-vertical",
+      "value": "40% Churn Reduced",
+      "details": "Enterprise-grade AI deployments",
+      "subDetails": "Millions of records processed daily",
+      "type": "streak"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Enterprise RAG System",
+      "description": "Production-grade Retrieval-Augmented Generation system for enterprise knowledge management. Leverages LLMs with custom embeddings, vector databases, and intelligent chunking for accurate document Q&A at scale.",
+      "tags": ["LangChain", "OpenAI", "Pinecone", "FastAPI", "Python"],
+      "icon": "ti-brain",
+      "featured": true,
+      "github": "https://github.com/sheriff786",
+      "demo": ""
+    },
+    {
+      "name": "Customer Churn Prediction Engine",
+      "description": "ML-powered churn prediction system that reduced customer churn by 40%. Built with ensemble models, feature engineering pipelines, and real-time scoring API deployed on cloud infrastructure.",
+      "tags": ["Python", "XGBoost", "MLflow", "AWS SageMaker"],
+      "icon": "ti-chart-arrows-vertical",
+      "featured": true,
+      "github": "https://github.com/sheriff786",
+      "demo": ""
+    },
+    {
+      "name": "NLP Text Analytics Platform",
+      "description": "End-to-end NLP platform for sentiment analysis, topic modeling, and named entity recognition. Processes millions of customer interactions for actionable business intelligence.",
+      "tags": ["Transformers", "spaCy", "BERT", "Docker"],
+      "icon": "ti-message-language",
+      "featured": false,
+      "github": "https://github.com/sheriff786",
+      "demo": ""
+    },
+    {
+      "name": "LLM Fine-tuning Pipeline",
+      "description": "Automated pipeline for fine-tuning large language models on domain-specific data using LoRA/QLoRA techniques. Includes data preparation, training orchestration, evaluation, and deployment.",
+      "tags": ["PyTorch", "Hugging Face", "LoRA", "PEFT"],
+      "icon": "ti-robot",
+      "featured": false,
+      "github": "https://github.com/sheriff786",
+      "demo": ""
+    },
+    {
+      "name": "Computer Vision Quality Inspector",
+      "description": "Deep learning-based visual inspection system for manufacturing defect detection. Uses transfer learning with custom CNN architectures achieving 98%+ accuracy in production environments.",
+      "tags": ["TensorFlow", "OpenCV", "ResNet", "AWS"],
+      "icon": "ti-eye",
+      "featured": false,
+      "github": "https://github.com/sheriff786",
+      "demo": ""
+    },
+    {
+      "name": "Real-time ML Monitoring Dashboard",
+      "description": "Production ML model monitoring system tracking data drift, model performance degradation, and feature importance changes. Automated retraining triggers and alerting pipeline.",
+      "tags": ["Evidently AI", "Grafana", "Prometheus", "Python"],
+      "icon": "ti-chart-line",
+      "featured": false,
+      "github": "https://github.com/sheriff786",
+      "demo": ""
+    }
+  ],
+  "experience": [
+    {
+      "company": "ValueLabs",
+      "role": "Senior Data Scientist / AI-ML Engineer",
+      "period": "2024 – Present",
+      "location": "Hyderabad, India",
+      "bullets": [
+        "Designing and deploying enterprise-grade AI applications leveraging Large Language Models (LLMs) and Generative AI for business automation.",
+        "Building Retrieval-Augmented Generation (RAG) pipelines for intelligent document processing and knowledge extraction at scale.",
+        "Implementing MLOps best practices with CI/CD pipelines for model deployment, monitoring, and retraining across cloud platforms.",
+        "Collaborating with cross-functional teams to deliver AI solutions that drive measurable business outcomes and revenue growth."
+      ]
+    },
+    {
+      "company": "Cognizant",
+      "role": "Data Scientist",
+      "period": "2019 – 2024",
+      "location": "India",
+      "bullets": [
+        "Developed and deployed ML models that reduced customer churn by 40%, significantly improving customer retention metrics.",
+        "Built end-to-end NLP pipelines for sentiment analysis, text classification, and named entity recognition serving enterprise clients.",
+        "Designed scalable data pipelines processing millions of records daily using cloud-based architectures.",
+        "Led AI-driven analytics initiatives generating actionable insights for business stakeholders across multiple domains."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "M.Tech — Data Science & Engineering",
+      "university": "BITS Pilani",
+      "details": "Specialization in AI/ML & Data Engineering",
+      "icon": "ti-school"
+    },
+    {
+      "degree": "B.Tech — Computer Science & Engineering",
+      "university": "OIST",
+      "details": "Foundation in CS fundamentals & Programming",
+      "icon": "ti-building"
+    }
+  ],
+  "certifications": [
+    {
+      "issuer": "BITS Pilani",
+      "name": "M.Tech in Data Science & Engineering",
+      "year": "Academic Degree"
+    },
+    {
+      "issuer": "To Be Updated",
+      "name": "Your Certification Here",
+      "year": "Year"
+    },
+    {
+      "issuer": "To Be Updated",
+      "name": "Your Certification Here",
+      "year": "Year"
+    }
+  ],
+  "contact": {
+    "eyebrow": "What's Next?",
+    "heading": "Get In Touch",
+    "description": "I'm currently open to new opportunities — especially FAANG and top-tier AI/ML roles. Whether you have a question, a collaboration idea, or just want to connect, my inbox is always open."
+  }
+}

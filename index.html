@@ -859,6 +859,201 @@ window.addEventListener('scroll', () => {
     a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--accent)' : '';
   });
 });
+
+// ─── DYNAMIC CONTENT LOADER ───
+async function loadPortfolioData() {
+  try {
+    const resp = await fetch('data.json');
+    if (!resp.ok) return;
+    const d = await resp.json();
+    
+    // Personal
+    const p = d.personal;
+    if (p) {
+      document.querySelector('.hero-greeting').lastChild.textContent = p.heroGreeting || '';
+      document.querySelector('.hero-name').textContent = p.name + '.';
+      document.querySelector('.hero-title').innerHTML = p.heroTagline || '';
+      document.querySelector('.hero-desc').innerHTML = p.heroDescription || '';
+      document.querySelector('.logo').innerHTML = `<span class="logo-bracket">{</span>&nbsp;${p.initials}&nbsp;<span class="logo-bracket">}</span>`;
+      document.title = `${p.fullName} — ${p.title}`;
+      if (p.resumeLink) document.querySelector('.nav-resume').href = p.resumeLink;
+      const aboutImg = document.querySelector('.about-photo img');
+      if (aboutImg && p.profileImage) aboutImg.src = p.profileImage;
+      // Sidebar email
+      const sideEmail = document.querySelector('.sidebar-email');
+      if (sideEmail && p.email) { sideEmail.href = 'mailto:' + p.email; sideEmail.textContent = p.email; }
+    }
+
+    // Social
+    const sl = d.socialLinks;
+    if (sl) {
+      const sideLinks = document.querySelectorAll('.sidebar-left a');
+      if (sideLinks[0] && sl.github) sideLinks[0].href = sl.github;
+      if (sideLinks[1] && sl.linkedin) sideLinks[1].href = sl.linkedin;
+      if (sideLinks[2] && sl.leetcode) sideLinks[2].href = sl.leetcode;
+    }
+
+    // Stats
+    if (d.stats && d.stats.length) {
+      const statsEl = document.querySelector('.stats-bar');
+      if (statsEl) {
+        statsEl.innerHTML = d.stats.map(s => `<div class="stat"><span class="stat-val">${s.value}</span><span class="stat-label">${s.label}</span></div>`).join('');
+      }
+    }
+
+    // About
+    if (d.about && d.about.length) {
+      const aboutText = document.querySelector('.about-text');
+      if (aboutText) aboutText.innerHTML = d.about.map(p => `<p>${p}</p>`).join('');
+    }
+
+    // Tech Stack
+    if (d.techStack && d.techStack.length) {
+      const skillsBox = document.querySelector('.skills-box');
+      if (skillsBox) {
+        skillsBox.innerHTML = `<div class="skills-box-title">Tech Stack</div>` + 
+          d.techStack.map(s => `<div class="skill-item"><span class="skill-arrow">▸</span> ${s}</div>`).join('');
+      }
+    }
+
+    // Expertise
+    if (d.expertise && d.expertise.length) {
+      const expTop = document.querySelectorAll('.lc-top.reveal')[0] || document.querySelectorAll('.lc-top')[0];
+      if (expTop) {
+        expTop.innerHTML = d.expertise.map(e => `
+          <div class="lc-card ${e.colorClass}">
+            <div class="lc-card-head"><span class="lc-badge-label">${e.category}</span><i class="ti ${e.icon} lc-icon"></i></div>
+            <div class="lc-count">${e.level}</div>
+            <div class="lc-sub">${e.details}</div>
+            <div class="lc-bar"><div class="lc-fill" style="width:${e.progress}%"></div></div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Expertise Highlights
+    if (d.expertiseHighlights && d.expertiseHighlights.length) {
+      const hlRow = document.querySelectorAll('.lc-top.lc-wide')[0];
+      if (hlRow) {
+        hlRow.innerHTML = d.expertiseHighlights.map(e => {
+          if (e.type === 'rank') return `
+            <div class="lc-card lc-rank">
+              <div class="lc-card-head"><span class="lc-badge-label">${e.title}</span><i class="ti ${e.icon}" style="color:var(--accent2);font-size:18px;"></i></div>
+              <div class="lc-rating-val">${e.value}</div>
+              <div class="lc-sub" style="margin-top:5px;">${e.details}</div>
+              ${e.badge ? `<div><span class="lc-badge-pill">${e.badge}</span></div>` : ''}
+            </div>`;
+          return `
+            <div class="lc-card lc-streak">
+              <div class="lc-card-head"><span class="lc-badge-label">${e.title}</span><i class="ti ${e.icon}" style="color:var(--accent);font-size:18px;"></i></div>
+              <div class="lc-streak-val">${e.value}</div>
+              <div class="lc-sub" style="margin-top:5px;">${e.details}</div>
+              ${e.subDetails ? `<div class="lc-sub">${e.subDetails}</div>` : ''}
+            </div>`;
+        }).join('');
+      }
+    }
+
+    // Projects
+    if (d.projects && d.projects.length) {
+      const projGrid = document.querySelector('.proj-grid');
+      if (projGrid) {
+        projGrid.innerHTML = d.projects.map(pr => `
+          <div class="proj-card">
+            <div class="proj-top">
+              <i class="ti ${pr.icon} proj-folder"></i>
+              <div class="proj-links">
+                ${pr.github ? `<a href="${pr.github}" title="GitHub"><i class="ti ti-brand-github"></i></a>` : ''}
+                ${pr.demo ? `<a href="${pr.demo}" title="Live Demo"><i class="ti ti-external-link"></i></a>` : ''}
+              </div>
+            </div>
+            <div>
+              ${pr.featured ? '<div class="proj-featured">Featured Project</div>' : ''}
+              <div class="proj-name">${pr.name}</div>
+            </div>
+            <p class="proj-desc">${pr.description}</p>
+            <div class="proj-tags">${(pr.tags||[]).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Experience
+    if (d.experience && d.experience.length) {
+      const expTabs = document.querySelector('.exp-tabs');
+      const expContainer = expTabs ? expTabs.parentElement : null;
+      if (expContainer) {
+        expContainer.innerHTML = `
+          <div class="exp-tabs">${d.experience.map((e, i) => `<div class="exp-tab ${i===0?'active':''}" onclick="switchTab(${i})">${e.company}</div>`).join('')}</div>
+          ${d.experience.map((e, i) => `
+            <div class="exp-panel ${i===0?'active':''}">
+              <div class="exp-role">${e.role} <span>@ ${e.company}</span></div>
+              <div class="exp-meta">${e.period} · ${e.location}</div>
+              <ul class="exp-bullets">${(e.bullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
+            </div>
+          `).join('')}
+        `;
+      }
+    }
+
+    // Education
+    if (d.education && d.education.length) {
+      const eduGrid = document.querySelector('.edu-grid');
+      if (eduGrid) {
+        eduGrid.innerHTML = d.education.map(e => `
+          <div class="edu-card">
+            <i class="ti ${e.icon} edu-icon"></i>
+            <div>
+              <div class="edu-degree">${e.degree}</div>
+              <div class="edu-uni">${e.university}</div>
+              <div class="edu-meta">${e.details}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Certifications
+    if (d.certifications && d.certifications.length) {
+      const certGrid = document.querySelector('.cert-grid');
+      if (certGrid) {
+        certGrid.innerHTML = d.certifications.map(c => `
+          <div class="cert-card">
+            <div class="cert-issuer">${c.issuer}</div>
+            <div class="cert-name">${c.name}</div>
+            <div class="cert-year">${c.year}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Contact
+    if (d.contact) {
+      const contactEye = document.querySelector('.contact-eyebrow');
+      const contactHead = document.querySelector('.contact-heading');
+      const contactSub = document.querySelector('.contact-sub');
+      if (contactEye) contactEye.textContent = d.contact.eyebrow;
+      if (contactHead) contactHead.textContent = d.contact.heading;
+      if (contactSub) contactSub.textContent = d.contact.description;
+    }
+
+    // Contact socials
+    if (sl) {
+      const socials = document.querySelector('.contact-socials');
+      if (socials) {
+        socials.innerHTML = `
+          ${sl.github ? `<a class="social-link" href="${sl.github}" target="_blank"><i class="ti ti-brand-github"></i> GitHub</a>` : ''}
+          ${sl.linkedin ? `<a class="social-link" href="${sl.linkedin}" target="_blank"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>` : ''}
+          ${sl.leetcode ? `<a class="social-link" href="${sl.leetcode}" target="_blank"><i class="ti ti-code"></i> LeetCode</a>` : ''}
+        `;
+      }
+    }
+
+  } catch(e) {
+    console.log('data.json not found, using static content');
+  }
+}
+loadPortfolioData();
 </script>
 </body>
 </html>
