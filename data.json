@@ -9,7 +9,7 @@
     "heroDescription": "I'm a <strong>Senior Data Scientist & AI/ML Engineer</strong> with 6+ years of experience building enterprise-grade AI applications, deploying LLMs, and designing scalable ML systems. Passionate about <strong>Generative AI</strong>, NLP, and transforming business challenges into data-driven solutions.",
     "email": "mdsheriff2702@gmail.com",
     "location": "Hyderabad/Bangalore, India",
-    "resumeLink": "resume.pdf",
+    "resumeLink": "Resume.pdf.pdf",
     "profileImage": "profile.jpg"
   },
   "socialLinks": {
@@ -145,20 +145,34 @@
       "period": "2024 – Present",
       "location": "Hyderabad, India",
       "bullets": [
-        "Designing and deploying enterprise-grade AI applications leveraging Large Language Models (LLMs) and Generative AI for business automation.",
-        "Building Retrieval-Augmented Generation (RAG) pipelines for intelligent document processing and knowledge extraction at scale.",
-        "Implementing MLOps best practices with CI/CD pipelines for model deployment, monitoring, and retraining across cloud platforms.",
-        "Collaborating with cross-functional teams to deliver AI solutions that drive measurable business outcomes and revenue growth."
+        "Built a RAG-based document processing system using Qdrant vector DB, AWS infrastructure, GPT 5.4, and multi-agent architecture for intelligent enterprise knowledge extraction at scale.",
+        "Developed an image document processing pipeline using AWS Textract services with Adapter and Lambda for extracting structured data from documents into a knowledge base.",
+        "Implemented document forgery detection using metadata analysis with ExifTool approach and deployed it using passive forensic techniques for fraud prevention.",
+        "Created synthetic training data on existing document images using Smooth Blur Patch Fill technique to augment datasets for improved model accuracy.",
+        "Built clustering models to group similar documents and designed a custom table extraction model using Transformer architecture in PyTorch, integrated into the production pipeline.",
+        "Collaborated with cross-functional teams to deliver AI solutions driving measurable business outcomes and revenue growth."
+      ]
+    },
+    {
+      "company": "LTIMindtree",
+      "role": "Data Scientist",
+      "period": "2022 – 2024",
+      "location": "India",
+      "bullets": [
+        "Developed and deployed ML models that reduced customer churn by 40%, significantly improving customer retention metrics.",
+        "Built end-to-end NLP pipelines for sentiment analysis, text classification, and named entity recognition serving enterprise clients.",
+        "Designed scalable data pipelines processing millions of records daily using cloud-based architectures.",
+        "Led AI-driven analytics initiatives generating actionable insights for business stakeholders across multiple domains."
       ]
     },
     {
       "company": "Cognizant",
       "role": "Data Scientist",
-      "period": "2019 – 2024",
+      "period": "2019 – 2022",
       "location": "India",
       "bullets": [
-        "Developed and deployed ML models that reduced customer churn by 40%, significantly improving customer retention metrics.",
-        "Built end-to-end NLP pipelines for sentiment analysis, text classification, and named entity recognition serving enterprise clients.",
+        "Developed and deployed ML models for predictive analytics and classification tasks across multiple enterprise clients.",
+        "Built end-to-end NLP pipelines for sentiment analysis, text classification, and named entity recognition.",
         "Designed scalable data pipelines processing millions of records daily using cloud-based architectures.",
         "Led AI-driven analytics initiatives generating actionable insights for business stakeholders across multiple domains."
       ]
