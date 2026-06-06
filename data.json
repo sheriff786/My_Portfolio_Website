@@ -82,6 +82,15 @@
       "type": "streak"
     }
   ],
+  "leetcode": {
+    "totalSolved": 350,
+    "easy": 120,
+    "medium": 180,
+    "hard": 50,
+    "contestRating": 1650,
+    "streak": 45,
+    "profileUrl": "https://leetcode.com/MohdSheriff786"
+  },
   "projects": [
     {
       "name": "Drift Taxonomy Engine",
