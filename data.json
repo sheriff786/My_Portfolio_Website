@@ -212,19 +212,34 @@
   ],
   "certifications": [
     {
-      "issuer": "BITS Pilani",
-      "name": "M.Tech in Data Science & Engineering",
-      "year": "Academic Degree"
+      "issuer": "Neo4j",
+      "name": "Graph Data Science Certification",
+      "year": "2025"
     },
     {
-      "issuer": "To Be Updated",
-      "name": "Your Certification Here",
-      "year": "Year"
+      "issuer": "AWS / QA",
+      "name": "AWS Machine Learning – Specialty",
+      "year": "2023"
     },
     {
-      "issuer": "To Be Updated",
-      "name": "Your Certification Here",
-      "year": "Year"
+      "issuer": "Dataiku",
+      "name": "ML Practitioner",
+      "year": "2024"
+    },
+    {
+      "issuer": "IBM / Coursera",
+      "name": "AI Engineering Professional Certificate",
+      "year": "2020"
+    },
+    {
+      "issuer": "Univ. of Washington",
+      "name": "Machine Learning Foundation",
+      "year": "2019"
+    },
+    {
+      "issuer": "HackerRank",
+      "name": "Problem Solving",
+      "year": "2020"
     }
   ],
   "contact": {
